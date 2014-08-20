@@ -1,4 +1,5 @@
-'use strict';
+(function() {
+  'use strict';
 
-/* Directives */
 
+}).call(this);
