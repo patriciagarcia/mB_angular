@@ -1,0 +1,13 @@
+{
+  "name": "myBeers",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "https://github.com/patriciagarcia/myBeers",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.2.x",
+    "angular-loader": "1.2.x",
+    "angular-mocks": "~1.2.x"
+  }
+}
