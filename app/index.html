@@ -12,12 +12,13 @@
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/app.css"/>
     </head>
-    <body ng-controller="BeerListCtrl">
+    <body ng-controller="myBeerListCtrl">
         <!--[if lt IE 8]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <div class="container">
+            <review-form beers="beers"></review-form>
             <beer-list beers="beers" class="beer_list"></beer-list>
         </div>
 

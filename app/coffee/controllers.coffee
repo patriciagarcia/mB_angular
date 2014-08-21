@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('myBeers.controllers', [])
-  .controller 'BeerListCtrl', ['$scope', ($scope) ->
+  .controller 'myBeerListCtrl', ['$scope', ($scope) ->
     $scope.beers = beers
   ]
 

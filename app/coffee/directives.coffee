@@ -12,4 +12,20 @@ angular.module('myBeers.directives', [])
     scope:
       beers: '='
     templateUrl: 'partials/beerList.hbs'
-    replace: true
+
+  .directive 'reviewForm', ->
+    restrict: 'E'
+    scope:
+      beers: '='
+    templateUrl: 'partials/reviewForm.hbs'
+    controller: ($scope) ->
+      $scope.beer = {}
+
+      $scope.addReview = (form)->
+        if form.$valid
+          $scope.beers.push($scope.beer)
+          emptyForm(form)
+
+      emptyForm = (form) ->
+        $scope.beer = {}
+        form.$setPristine()

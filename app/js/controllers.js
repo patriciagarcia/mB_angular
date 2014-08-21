@@ -2,7 +2,7 @@
   'use strict';
   var beers;
 
-  angular.module('myBeers.controllers', []).controller('BeerListCtrl', [
+  angular.module('myBeers.controllers', []).controller('myBeerListCtrl', [
     '$scope', function($scope) {
       return $scope.beers = beers;
     }
