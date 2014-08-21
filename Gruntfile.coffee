@@ -7,6 +7,9 @@ module.exports = (grunt) ->
       coffee:
         files: 'app/coffee/*.coffee'
         tasks: ['coffee:compile']
+      sass:
+        files: 'app/css/scss/*.scss'
+        tasks: ['sass']
 
     coffee:
       compile:
@@ -17,7 +20,13 @@ module.exports = (grunt) ->
         dest: 'app/js'
         ext: '.js'
 
-  grunt.loadNpmTasks('grunt-contrib-coffee')
+    sass:
+      dist:
+        files:
+          'app/css/app.css': 'app/css/scss/app.scss'
+
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-sass')
 
   grunt.registerTask('default', ['watch:coffee'])
