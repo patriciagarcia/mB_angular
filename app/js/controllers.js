@@ -14,6 +14,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -21,6 +22,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -28,6 +30,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -35,6 +38,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -42,6 +46,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -49,6 +54,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -56,6 +62,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -63,6 +70,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -70,6 +78,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }, {
@@ -77,6 +86,7 @@
       beer_style: 'Californian Pale Ale',
       beer_description: 'The new 3.8% Pale Ale is brewed with a solid malt base, moderate bitterness and masses of late hops and dry hops, specifically Citra, Simcoe and HBC.',
       beer_label: 'https://d1c8v1qci5en44.cloudfront.net/site/beer_logos/beer-_164769_sm_8722478429a9dca1cff174477189bd.jpeg',
+      beer_rating: 4,
       brewery_name: 'Brew Dog',
       brewery_location: 'Scotland'
     }

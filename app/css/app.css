@@ -9,5 +9,8 @@ li {
 
 .review_form {
   display: block;
-  width: 50%;
+  width: 60%;
   margin: 20px auto; }
+
+.beer aside {
+  padding-top: 15px; }
