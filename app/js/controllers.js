@@ -2,9 +2,13 @@
   'use strict';
   var beers;
 
-  angular.module('myBeers.controllers', []).controller('myBeerListCtrl', [
-    '$scope', function($scope) {
-      return $scope.beers = beers;
+  angular.module('myBeers.controllers', ['myBeers.services']).controller('myBeerListCtrl', [
+    '$scope', 'db', function($scope, db) {
+      $scope.beers = [];
+      return db.all().then(function(result) {
+        $scope.beers = result;
+        return $scope.$apply();
+      });
     }
   ]);
 
