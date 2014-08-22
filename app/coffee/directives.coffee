@@ -21,6 +21,9 @@ angular.module('myBeers.directives', [])
     controller: ($scope) ->
       $scope.beer = {}
 
+      $scope.searchBeer = (name) ->
+        alert('Search not yet implemented. Coming soon.')
+
       $scope.addReview = (form)->
         if form.$valid
           $scope.beers.push($scope.beer)

@@ -26,6 +26,9 @@
       controller: function($scope) {
         var emptyForm;
         $scope.beer = {};
+        $scope.searchBeer = function(name) {
+          return alert('Search not yet implemented. Coming soon.');
+        };
         $scope.addReview = function(form) {
           if (form.$valid) {
             $scope.beers.push($scope.beer);

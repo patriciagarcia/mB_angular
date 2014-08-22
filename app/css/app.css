@@ -6,3 +6,8 @@ li {
 
 .ng-valid.ng-dirty {
   border-color: green; }
+
+.review_form {
+  display: block;
+  width: 50%;
+  margin: 20px auto; }

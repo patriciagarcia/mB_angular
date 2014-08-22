@@ -2,31 +2,26 @@
     <section class="row well live-preview">
         <beer beer="beer"></beer>
     </section>
-    <div class="input-container">
+    <div class="row input-container">
         <fieldset class="form-group">
-            <label for="beer_name" class="col-sm-2 control-label">Beer name:</label>
-            <span class="col-sm-9">
+            <span class="input-group">
                 <input type="text" class="form-control" id="beer_name" ng-model="beer.beer_name"
-                placeholder="Beer name" required>
+                    placeholder="Beer name" required>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="searchBeer(beer.beer_name)">Search</button>
+                </span>
             </span>
         </fieldset>
         <fieldset class="form-group">
-            <label for="brewery_name" class="control-label col-sm-2">Brewery name:</label>
-            <span class="col-sm-9">
                 <input type="text" id="brewery_name" class="form-control" ng-model="beer.brewery_name"
                 placeholder="Brewery name" required>
-            </span>
         </fieldset>
         <fieldset class="form-group">
-            <label for="beer_label" class="control-label col-sm-2">Beer label image url</label>
-            <span class="col-sm-9">
                 <input type="text" id="beer_label" class="form-control" ng-model="beer.beer_label"
-                placeholder="Url for the beer label image" required></span>
+                placeholder="Url for the beer label image" required>
         </fieldset>
         <fieldset class="form-group">
-            <span class="col-sm-9 col-sm-offset-2">
                 <button class="btn btn-primary">Save</button>
-            </span>
         </fieldset>
     </div>
 </form>
