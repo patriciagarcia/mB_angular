@@ -13,6 +13,7 @@ angular.module('myBeers.directives', ['myBeers.services'])
     scope:
       beers: '='
       delete: '='
+      title: '@'
     templateUrl: 'partials/beerList.hbs'
 
   .directive 'reviewForm', ->

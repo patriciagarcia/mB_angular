@@ -1,3 +1,6 @@
+<header ng-show="title">
+    <span class="title">{{title}}</span>
+</header>
 <ul>
     <li ng-repeat="beer in beers">
         <beer beer="beer" class="beer" delete="delete"></beer>

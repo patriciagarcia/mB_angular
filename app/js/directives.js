@@ -14,7 +14,8 @@
       restrict: 'E',
       scope: {
         beers: '=',
-        "delete": '='
+        "delete": '=',
+        title: '@'
       },
       templateUrl: 'partials/beerList.hbs'
     };
