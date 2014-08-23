@@ -1,8 +1,10 @@
 <div class="row">
     <aside class="col-sm-2">
-        <a href="#"><img ng-src="{{beer.beer_label}}" alt="Label for {{beer.beer_name}}" class="full"></a>
+        <p class="logo">
+            <img ng-src="{{beer.beer_label}}" alt="Label for {{beer.beer_name}}" class="full">
+        </p>
     </aside>
-    <div class="col-sm-9">
+    <div class="col-sm-9 info">
         <h4>{{beer.beer_name}}</h4>
         <p class="text-muted">By {{beer.brewery_name}}</p>
         <p><rating rating={{beer.beer_rating}}></rating></p>

@@ -18,6 +18,8 @@ li {
 .beer {
   display: block;
   padding: 15px; }
+  .beer .logo {
+    margin-left: 30px; }
 
 .beer_list {
   display: block;
