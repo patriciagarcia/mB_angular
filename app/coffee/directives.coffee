@@ -14,8 +14,9 @@ angular.module('myBeers.directives', [])
       rating: '@'
     templateUrl: 'partials/rating.hbs'
     link: (scope, elem, attrs) ->
-      full_stars = ({empty: false} for num in [1..scope.rating])
-      empty_stars = ({empty: true} for num in [1..5 - scope.rating])
+      rating = scope.rating || 0
+      full_stars = ({empty: false} for num in [0...rating])
+      empty_stars = ({empty: true} for num in [0...(5 - rating)])
       scope.stars = full_stars.concat empty_stars
 
   .directive 'beerList', ->

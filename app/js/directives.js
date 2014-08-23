@@ -17,11 +17,12 @@
       },
       templateUrl: 'partials/rating.hbs',
       link: function(scope, elem, attrs) {
-        var empty_stars, full_stars, num;
+        var empty_stars, full_stars, num, rating;
+        rating = scope.rating || 0;
         full_stars = (function() {
-          var _i, _ref, _results;
+          var _i, _results;
           _results = [];
-          for (num = _i = 1, _ref = scope.rating; 1 <= _ref ? _i <= _ref : _i >= _ref; num = 1 <= _ref ? ++_i : --_i) {
+          for (num = _i = 0; 0 <= rating ? _i < rating : _i > rating; num = 0 <= rating ? ++_i : --_i) {
             _results.push({
               empty: false
             });
@@ -31,7 +32,7 @@
         empty_stars = (function() {
           var _i, _ref, _results;
           _results = [];
-          for (num = _i = 1, _ref = 5 - scope.rating; 1 <= _ref ? _i <= _ref : _i >= _ref; num = 1 <= _ref ? ++_i : --_i) {
+          for (num = _i = 0, _ref = 5 - rating; 0 <= _ref ? _i < _ref : _i > _ref; num = 0 <= _ref ? ++_i : --_i) {
             _results.push({
               empty: true
             });
