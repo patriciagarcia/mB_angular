@@ -8,6 +8,16 @@ angular.module('myBeers.directives', ['myBeers.services'])
       delete: '='
     templateUrl: 'partials/beer.hbs'
 
+  .directive 'rating', ->
+    restrict: 'E'
+    scope:
+      rating: '@'
+    templateUrl: 'partials/rating.hbs'
+    link: (scope, elem, attrs) ->
+      full_stars = ({empty: false} for num in [1..scope.rating])
+      empty_stars = ({empty: true} for num in [1..5 - scope.rating])
+      scope.stars = full_stars.concat empty_stars
+
   .directive 'beerList', ->
     restrict: 'E'
     scope:
