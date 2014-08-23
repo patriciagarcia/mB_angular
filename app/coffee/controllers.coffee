@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('myBeers.controllers', ['myBeers.services'])
+angular.module('myBeers.controllers', [])
   .controller 'myBeerListCtrl', ['$scope', 'db', ($scope, db) ->
     $scope.beers = []
 

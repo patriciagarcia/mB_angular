@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('myBeers.directives', ['myBeers.services'])
+angular.module('myBeers.directives', [])
   .directive 'beer', ->
     restrict: 'E'
     scope:

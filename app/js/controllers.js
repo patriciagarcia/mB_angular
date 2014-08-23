@@ -2,7 +2,7 @@
   'use strict';
   var beers;
 
-  angular.module('myBeers.controllers', ['myBeers.services']).controller('myBeerListCtrl', [
+  angular.module('myBeers.controllers', []).controller('myBeerListCtrl', [
     '$scope', 'db', function($scope, db) {
       $scope.beers = [];
       db.all().then(function(data) {

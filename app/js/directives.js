@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('myBeers.directives', ['myBeers.services']).directive('beer', function() {
+  angular.module('myBeers.directives', []).directive('beer', function() {
     return {
       restrict: 'E',
       scope: {
