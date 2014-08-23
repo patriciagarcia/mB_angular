@@ -5,9 +5,10 @@
   angular.module('myBeers.controllers', ['myBeers.services']).controller('myBeerListCtrl', [
     '$scope', 'db', function($scope, db) {
       $scope.beers = [];
-      return db.all().then(function(result) {
-        $scope.beers = result;
-        return $scope.$apply();
+      return db.all().then(function(data) {
+        return $scope.$apply(function() {
+          return $scope.beers = data;
+        });
       });
     }
   ]);

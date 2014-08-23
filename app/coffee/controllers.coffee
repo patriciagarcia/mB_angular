@@ -4,9 +4,9 @@ angular.module('myBeers.controllers', ['myBeers.services'])
   .controller 'myBeerListCtrl', ['$scope', 'db', ($scope, db) ->
     $scope.beers = []
 
-    db.all().then (result) ->
-      $scope.beers = result
-      $scope.$apply()
+    db.all().then (data) ->
+      $scope.$apply ->
+        $scope.beers = data
   ]
 
 beers = [
