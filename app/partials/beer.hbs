@@ -2,9 +2,12 @@
     <aside class="col-sm-2">
         <a href="#"><img ng-src="{{beer.beer_label}}" alt="Label for {{beer.beer_name}}" class="full"></a>
     </aside>
-    <div class="col-sm-10">
+    <div class="col-sm-8">
         <h3>{{beer.beer_name}}</h3>
         <p>By {{beer.brewery_name}}</p>
         <p>Rating {{beer.beer_rating}}/5</p>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn" type="button" ng-click="delete(beer)">Delete</button>
     </div>
 </div>

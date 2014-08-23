@@ -28,6 +28,11 @@ angular.module('myBeers.services', [])
           .then (result) ->
             return result
 
+      delete: (obj) ->
+        pouchdb.remove(obj)
+          .then (result) ->
+            return result
+
       # Returns a beer array
       all: ->
         pouchdb.allDocs(

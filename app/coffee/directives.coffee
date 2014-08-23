@@ -5,12 +5,14 @@ angular.module('myBeers.directives', ['myBeers.services'])
     restrict: 'E'
     scope:
       beer: '='
+      delete: '='
     templateUrl: 'partials/beer.hbs'
 
   .directive 'beerList', ->
     restrict: 'E'
     scope:
       beers: '='
+      delete: '='
     templateUrl: 'partials/beerList.hbs'
 
   .directive 'reviewForm', ->
@@ -30,8 +32,8 @@ angular.module('myBeers.directives', ['myBeers.services'])
           $scope.beers.unshift($scope.beer)
 
           $scope.beer._id = new Date().toISOString()
-          db.put($scope.beer).then (result) ->
-            $scope.beer._rev = result.rev
+          db.put($scope.beer).then (data) ->
+            $scope.beer._rev = data.rev
 
           emptyForm(form)
 

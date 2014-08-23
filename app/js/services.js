@@ -27,6 +27,11 @@
           return result;
         });
       },
+      "delete": function(obj) {
+        return pouchdb.remove(obj).then(function(result) {
+          return result;
+        });
+      },
       all: function() {
         return pouchdb.allDocs({
           include_docs: true,

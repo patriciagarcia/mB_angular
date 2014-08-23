@@ -4,7 +4,8 @@
     return {
       restrict: 'E',
       scope: {
-        beer: '='
+        beer: '=',
+        "delete": '='
       },
       templateUrl: 'partials/beer.hbs'
     };
@@ -12,7 +13,8 @@
     return {
       restrict: 'E',
       scope: {
-        beers: '='
+        beers: '=',
+        "delete": '='
       },
       templateUrl: 'partials/beerList.hbs'
     };
@@ -33,8 +35,8 @@
           if (form.$valid) {
             $scope.beers.unshift($scope.beer);
             $scope.beer._id = new Date().toISOString();
-            db.put($scope.beer).then(function(result) {
-              return $scope.beer._rev = result.rev;
+            db.put($scope.beer).then(function(data) {
+              return $scope.beer._rev = data.rev;
             });
             return emptyForm(form);
           }

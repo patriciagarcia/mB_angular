@@ -4,6 +4,10 @@ angular.module('myBeers.controllers', ['myBeers.services'])
   .controller 'myBeerListCtrl', ['$scope', 'db', ($scope, db) ->
     $scope.beers = []
 
+    $scope.deleteBeer = (beer) ->
+      $scope.beers.splice($scope.beers.indexOf(beer), 1)
+      db.delete(beer)
+
     db.all().then (data) ->
       $scope.$apply ->
         $scope.beers = data
