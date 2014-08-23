@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('myBeers.directives', [])
+angular.module('myBeers.directives', ['myBeers.services'])
   .directive 'beer', ->
     restrict: 'E'
     scope:
@@ -27,7 +27,7 @@ angular.module('myBeers.directives', [])
       title: '@'
     templateUrl: 'partials/beerList.hbs'
 
-  .directive 'reviewForm', ->
+  .directive 'reviewForm', ['geolocation', (geolocation) ->
     restrict: 'E'
     scope:
       beers: '='
@@ -44,6 +44,37 @@ angular.module('myBeers.directives', [])
           $scope.add($scope.beer)
           emptyForm(form)
 
+      $scope.getPosition = ->
+        searchingPosition()
+
+        geolocation.getPosition()
+          .then (position) ->
+            showPosition(position)
+          .catch (error) ->
+            searchingPosition(false, error)
+
+      searchingPosition = (searching = true, error) ->
+        placeholder = if searching then 'Finding location..' else 'Where did you find the beer?'
+        angular.element('#beer_location')
+          .attr('placeholder', placeholder)
+          .prop('disabled', searching)
+        toggleSubmitDisabled()
+
+        unless searching
+          alert("#{error} \n Please, enter location manually.")
+
+      showPosition = (position) ->
+        angular.element('#beer_location')
+          .val("#{position.lat}, #{position.lng}")
+          .prop('disabled', false)
+        toggleSubmitDisabled()
+
+      toggleSubmitDisabled = (disabled) ->
+        submit = angular.element('.review_form .submit')
+        disabled = disabled || !submit.prop('disabled')
+        submit.prop('disabled', disabled)
+
       emptyForm = (form) ->
         $scope.beer = {}
         form.$setPristine()
+  ]

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('myBeers.directives', []).directive('beer', function() {
+  angular.module('myBeers.directives', ['myBeers.services']).directive('beer', function() {
     return {
       restrict: 'E',
       scope: {
@@ -52,32 +52,64 @@
       },
       templateUrl: 'partials/beerList.hbs'
     };
-  }).directive('reviewForm', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        beers: '=',
-        add: '='
-      },
-      templateUrl: 'partials/reviewForm.hbs',
-      controller: function($scope) {
-        var emptyForm;
-        $scope.beer = {};
-        $scope.searchBeer = function(name) {
-          return alert('Search not yet implemented. Coming soon.');
-        };
-        $scope.addReview = function(form) {
-          if (form.$valid) {
-            $scope.add($scope.beer);
-            return emptyForm(form);
-          }
-        };
-        return emptyForm = function(form) {
+  }).directive('reviewForm', [
+    'geolocation', function(geolocation) {
+      return {
+        restrict: 'E',
+        scope: {
+          beers: '=',
+          add: '='
+        },
+        templateUrl: 'partials/reviewForm.hbs',
+        controller: function($scope) {
+          var emptyForm, searchingPosition, showPosition, toggleSubmitDisabled;
           $scope.beer = {};
-          return form.$setPristine();
-        };
-      }
-    };
-  });
+          $scope.searchBeer = function(name) {
+            return alert('Search not yet implemented. Coming soon.');
+          };
+          $scope.addReview = function(form) {
+            if (form.$valid) {
+              $scope.add($scope.beer);
+              return emptyForm(form);
+            }
+          };
+          $scope.getPosition = function() {
+            searchingPosition();
+            return geolocation.getPosition().then(function(position) {
+              return showPosition(position);
+            })["catch"](function(error) {
+              return searchingPosition(false, error);
+            });
+          };
+          searchingPosition = function(searching, error) {
+            var placeholder;
+            if (searching == null) {
+              searching = true;
+            }
+            placeholder = searching ? 'Finding location..' : 'Where did you find the beer?';
+            angular.element('#beer_location').attr('placeholder', placeholder).prop('disabled', searching);
+            toggleSubmitDisabled();
+            if (!searching) {
+              return alert("" + error + " \n Please, enter location manually.");
+            }
+          };
+          showPosition = function(position) {
+            angular.element('#beer_location').val("" + position.lat + ", " + position.lng).prop('disabled', false);
+            return toggleSubmitDisabled();
+          };
+          toggleSubmitDisabled = function(disabled) {
+            var submit;
+            submit = angular.element('.review_form .submit');
+            disabled = disabled || !submit.prop('disabled');
+            return submit.prop('disabled', disabled);
+          };
+          return emptyForm = function(form) {
+            $scope.beer = {};
+            return form.$setPristine();
+          };
+        }
+      };
+    }
+  ]);
 
 }).call(this);

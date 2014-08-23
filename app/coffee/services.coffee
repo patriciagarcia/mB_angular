@@ -17,6 +17,7 @@ angular.module('myBeers.services', [])
     # Sync to remote CouchDB
     sync()
 
+    # db service return
     {
       put: (obj) ->
         pouchdb.put(obj)
@@ -43,3 +44,32 @@ angular.module('myBeers.services', [])
                     .map (beer) ->
                       return beer.doc
     }
+
+  .factory 'geolocation', ['$q', ($q) ->
+    deferred = $q.defer()
+
+    onError = ->
+      if (navigator.geolocation)
+        error = 'Error: the geolocation service failed.'
+      else
+        error = 'Error: Your browser does not support geolocation.'
+
+      deferred.reject(error)
+
+    getCoords = (position) ->
+      lat = position.coords.latitude
+      lng = position.coords.longitude
+
+      deferred.resolve({ lat: lat, lng: lng })
+
+    # geolocation service return
+    {
+      getPosition: ->
+        if (navigator.geolocation)
+          navigator.geolocation.getCurrentPosition(getCoords, onError)
+        else
+          onError()
+
+        return deferred.promise
+    }
+  ]

@@ -43,6 +43,39 @@
         });
       }
     };
-  });
+  }).factory('geolocation', [
+    '$q', function($q) {
+      var deferred, getCoords, onError;
+      deferred = $q.defer();
+      onError = function() {
+        var error;
+        if (navigator.geolocation) {
+          error = 'Error: the geolocation service failed.';
+        } else {
+          error = 'Error: Your browser does not support geolocation.';
+        }
+        return deferred.reject(error);
+      };
+      getCoords = function(position) {
+        var lat, lng;
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+        return deferred.resolve({
+          lat: lat,
+          lng: lng
+        });
+      };
+      return {
+        getPosition: function() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getCoords, onError);
+          } else {
+            onError();
+          }
+          return deferred.promise;
+        }
+      };
+    }
+  ]);
 
 }).call(this);
