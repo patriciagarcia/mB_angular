@@ -4,13 +4,20 @@ angular.module('myBeers.controllers', ['myBeers.services'])
   .controller 'myBeerListCtrl', ['$scope', 'db', ($scope, db) ->
     $scope.beers = []
 
+    db.all().then (data) ->
+      $scope.$apply ->
+        $scope.beers = data
+
     $scope.deleteBeer = (beer) ->
       $scope.beers.splice($scope.beers.indexOf(beer), 1)
       db.delete(beer)
 
-    db.all().then (data) ->
-      $scope.$apply ->
-        $scope.beers = data
+    $scope.addBeer = (beer) ->
+      $scope.beers.unshift(beer)
+
+      beer._id = new Date().toISOString()
+      db.put(beer).then (data) ->
+        beer._rev = data.rev
   ]
 
 beers = [

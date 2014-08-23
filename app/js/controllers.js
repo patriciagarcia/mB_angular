@@ -5,15 +5,22 @@
   angular.module('myBeers.controllers', ['myBeers.services']).controller('myBeerListCtrl', [
     '$scope', 'db', function($scope, db) {
       $scope.beers = [];
-      $scope.deleteBeer = function(beer) {
-        $scope.beers.splice($scope.beers.indexOf(beer), 1);
-        return db["delete"](beer);
-      };
-      return db.all().then(function(data) {
+      db.all().then(function(data) {
         return $scope.$apply(function() {
           return $scope.beers = data;
         });
       });
+      $scope.deleteBeer = function(beer) {
+        $scope.beers.splice($scope.beers.indexOf(beer), 1);
+        return db["delete"](beer);
+      };
+      return $scope.addBeer = function(beer) {
+        $scope.beers.unshift(beer);
+        beer._id = new Date().toISOString();
+        return db.put(beer).then(function(data) {
+          return beer._rev = data.rev;
+        });
+      };
     }
   ]);
 

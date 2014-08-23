@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('myBeers.directives', ['myBeers.services']).directive('beer', function() {
+  angular.module('myBeers.directives', []).directive('beer', function() {
     return {
       restrict: 'E',
       scope: {
@@ -55,10 +55,11 @@
     return {
       restrict: 'E',
       scope: {
-        beers: '='
+        beers: '=',
+        add: '='
       },
       templateUrl: 'partials/reviewForm.hbs',
-      controller: function($scope, db) {
+      controller: function($scope) {
         var emptyForm;
         $scope.beer = {};
         $scope.searchBeer = function(name) {
@@ -66,11 +67,7 @@
         };
         $scope.addReview = function(form) {
           if (form.$valid) {
-            $scope.beers.unshift($scope.beer);
-            $scope.beer._id = new Date().toISOString();
-            db.put($scope.beer).then(function(data) {
-              return $scope.beer._rev = data.rev;
-            });
+            $scope.add($scope.beer);
             return emptyForm(form);
           }
         };

@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('myBeers.directives', ['myBeers.services'])
+angular.module('myBeers.directives', [])
   .directive 'beer', ->
     restrict: 'E'
     scope:
@@ -30,22 +30,17 @@ angular.module('myBeers.directives', ['myBeers.services'])
     restrict: 'E'
     scope:
       beers: '='
+      add: '='
     templateUrl: 'partials/reviewForm.hbs'
-    controller: ($scope, db) ->
+    controller: ($scope) ->
       $scope.beer = {}
 
       $scope.searchBeer = (name) ->
         alert('Search not yet implemented. Coming soon.')
 
       $scope.addReview = (form)->
-
         if form.$valid
-          $scope.beers.unshift($scope.beer)
-
-          $scope.beer._id = new Date().toISOString()
-          db.put($scope.beer).then (data) ->
-            $scope.beer._rev = data.rev
-
+          $scope.add($scope.beer)
           emptyForm(form)
 
       emptyForm = (form) ->
