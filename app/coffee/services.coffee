@@ -3,6 +3,19 @@
 angular.module('myBeers.services', [])
   .factory 'db', ->
     pouchdb = new PouchDB('beersdb')
+    remoteCouch = 'http://ptrcgrc.iriscouch.com/beersdb'
+
+    syncError = ->
+      console.log('CouchDB sync error')
+
+    sync = ->
+      opts =
+        live: true
+      pouchdb.replicate.to(remoteCouch, opts, syncError)
+      pouchdb.replicate.from(remoteCouch, opts, syncError)
+
+    # Sync to remote CouchDB
+    sync()
 
     {
       put: (obj) ->
