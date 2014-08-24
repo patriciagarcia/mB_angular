@@ -30,7 +30,6 @@ angular.module('myBeers.directives', [])
   .directive 'reviewForm', ['geolocation', 'geocoding', (geolocation, geocoding) ->
     restrict: 'E'
     scope:
-      beers: '='
       add: '='
     templateUrl: 'partials/reviewForm.hbs'
     controller: ($scope) ->

@@ -57,7 +57,6 @@
       return {
         restrict: 'E',
         scope: {
-          beers: '=',
           add: '='
         },
         templateUrl: 'partials/reviewForm.hbs',
