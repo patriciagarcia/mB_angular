@@ -5,7 +5,9 @@
     pouchdb = new PouchDB('beersdb');
     remoteCouch = 'http://ptrcgrc.iriscouch.com/beersdb';
     syncError = function() {
-      return console.log('CouchDB sync error');
+      if (console) {
+        return console.log('CouchDB sync error');
+      }
     };
     sync = function() {
       var opts;
@@ -44,34 +46,87 @@
       }
     };
   }).factory('geolocation', [
-    '$q', function($q) {
-      var deferred, getCoords, onError;
-      deferred = $q.defer();
-      onError = function() {
-        var error;
-        if (navigator.geolocation) {
-          error = 'Error: the geolocation service failed.';
-        } else {
-          error = 'Error: Your browser does not support geolocation.';
-        }
-        return deferred.reject(error);
-      };
-      getCoords = function(position) {
-        var lat, lng;
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
-        return deferred.resolve({
-          lat: lat,
-          lng: lng
-        });
-      };
+    '$q', '$window', 'geocoding', function($q, $window, geocoding) {
       return {
-        getPosition: function() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(getCoords, onError);
+        getCurrentPosition: function() {
+          var deferred, geocode, onError;
+          deferred = $q.defer();
+          onError = function() {
+            var error;
+            if ($window.navigator.geolocation) {
+              error = 'Error: the geolocation service failed.';
+            } else {
+              error = 'Error: Your browser does not support geolocation.';
+            }
+            return deferred.reject(error);
+          };
+          geocode = function(data) {
+            var position;
+            position = {
+              lat: data.coords.latitude,
+              lon: data.coords.longitude
+            };
+            return geocoding.getPosition(position, true).then(function(position) {
+              return deferred.resolve(position);
+            })["catch"](function(error) {
+              position.displayName = "" + lat + ", " + lon;
+              return deferred.resolve(position);
+            });
+          };
+          if ($window.navigator.geolocation) {
+            $window.navigator.geolocation.getCurrentPosition(geocode, onError);
           } else {
             onError();
           }
+          return deferred.promise;
+        }
+      };
+    }
+  ]).factory('geocoding', [
+    '$q', '$http', function($q, $http) {
+      var onError, returnPosition;
+      onError = function(deferred, error) {
+        return deferred.reject(error);
+      };
+      returnPosition = function(deferred, data) {
+        return deferred.resolve({
+          lat: data.lat,
+          lon: data.lon,
+          address: data.address,
+          displayName: data.display_name,
+          addressCache: data.display_name
+        });
+      };
+      return {
+        getPosition: function(location, reverse) {
+          var deferred, params, url;
+          if (reverse == null) {
+            reverse = false;
+          }
+          deferred = $q.defer();
+          url = "http://nominatim.openstreetmap.org/" + (reverse ? 'reverse' : 'search');
+          params = {
+            format: 'json',
+            addressdetails: 1
+          };
+          if (reverse) {
+            params['lat'] = location.lat;
+            params['lon'] = location.lon;
+          } else {
+            params['q'] = location.displayName;
+          }
+          $http({
+            method: 'GET',
+            url: url,
+            params: params
+          }).success(function(data) {
+            if (data instanceof Array) {
+              data = data[0];
+            }
+            return returnPosition(deferred, data);
+          }).error(function(data) {
+            return onError(deferred, data);
+          });
           return deferred.promise;
         }
       };

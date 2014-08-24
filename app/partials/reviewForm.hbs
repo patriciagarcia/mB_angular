@@ -22,10 +22,10 @@
         </fieldset>
         <fieldset class="form-group">
             <span class="input-group">
-                <input type="text" class="form-control" id="beer_location" ng-model="beer.beer_location"
+                <input type="text" class="form-control" id="beer_location" ng-model="beer.beer_location.displayName"
                     placeholder="Where did you find the beer?" required>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="getPosition()">
+                    <button class="btn btn-default" type="button" ng-click="getCurrentPosition()">
                         <span class="glyphicon glyphicon-map-marker"></span>
                     </button>
                 </span>

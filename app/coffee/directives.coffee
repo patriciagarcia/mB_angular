@@ -27,54 +27,81 @@ angular.module('myBeers.directives', [])
       title: '@'
     templateUrl: 'partials/beerList.hbs'
 
-  .directive 'reviewForm', ['geolocation', (geolocation) ->
+  .directive 'reviewForm', ['geolocation', 'geocoding', (geolocation, geocoding) ->
     restrict: 'E'
     scope:
       beers: '='
       add: '='
     templateUrl: 'partials/reviewForm.hbs'
     controller: ($scope) ->
-      $scope.beer = {}
+      emptyBeer = -> {beer_location: address: {}}
+
+      $scope.beer = emptyBeer()
 
       $scope.searchBeer = (name) ->
         alert('Search not yet implemented. Coming soon.')
 
       $scope.addReview = (form)->
         if form.$valid
-          $scope.add($scope.beer)
-          emptyForm(form)
+          # If user got address from geolocation and didn't change it.
+          if ($scope.beer.beer_location.lat and
+                $scope.beer.beer_location.addressCache is $scope.beer.beer_location.displayName)
+            saveAndCleanReview(form)
+          else # discard beer_location and geocode the new displayName
+            displayName = $scope.beer.beer_location.displayName
+            clearBeerLocation()
 
-      $scope.getPosition = ->
-        searchingPosition()
+            geocoding.getPosition({displayName: displayName})
+              .then (position) ->
+                $scope.beer.beer_location = position
+              .catch ->
+                $scope.beer.beer_location.displayName = displayName
+              .finally ->
+                saveAndCleanReview(form)
 
-        geolocation.getPosition()
+      $scope.getCurrentPosition = ->
+        showSearchingLocation()
+
+        geolocation.getCurrentPosition()
           .then (position) ->
-            showPosition(position)
+            $scope.beer.beer_location = position
+            showSearchingLocation(false)
           .catch (error) ->
-            searchingPosition(false, error)
+            showSearchingLocation(false, error)
 
-      searchingPosition = (searching = true, error) ->
-        placeholder = if searching then 'Finding location..' else 'Where did you find the beer?'
-        angular.element('#beer_location')
-          .attr('placeholder', placeholder)
-          .prop('disabled', searching)
-        toggleSubmitDisabled()
+      saveAndCleanReview = (form) ->
+        delete $scope.beer.beer_location.addressCache
+        $scope.add($scope.beer)
+        emptyForm(form)
 
-        unless searching
-          alert("#{error} \n Please, enter location manually.")
+      showSearchingLocation = (searching = true, error) ->
+        if searching or error
+          searchingMessage = 'Finding current location.'
+          errorMessage = 'Please, enter location manually.'
+          updateLocationInputPlaceholder(if searching then searchingMessage else errorMessage)
 
-      showPosition = (position) ->
-        angular.element('#beer_location')
-          .val("#{position.lat}, #{position.lng}")
-          .prop('disabled', false)
-        toggleSubmitDisabled()
+        toggleLocationInputDisabled(searching)
+        toggleSubmitDisabled(searching)
+
+        alert("#{error} \n #{errorMessage}.") if error
+
+      submitButton = angular.element('.review_form .submit')
+      locationInput = angular.element('#beer_location')
+
+      updateLocationInputPlaceholder = (message) ->
+        locationInput.prop('placeholder', message)
+
+      toggleLocationInputDisabled = (disabled) ->
+        locationInput.prop('disabled', disabled || !locationInput.prop('disabled'))
 
       toggleSubmitDisabled = (disabled) ->
-        submit = angular.element('.review_form .submit')
-        disabled = disabled || !submit.prop('disabled')
-        submit.prop('disabled', disabled)
+        submitButton.prop('disabled', disabled || !submitButton.prop('disabled'))
+
+      clearBeerLocation = ->
+        $scope.beer.beer_location =
+          address: {}
 
       emptyForm = (form) ->
-        $scope.beer = {}
+        $scope.beer = emptyBeer()
         form.$setPristine()
   ]

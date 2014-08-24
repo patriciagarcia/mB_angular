@@ -53,7 +53,7 @@
       templateUrl: 'partials/beerList.hbs'
     };
   }).directive('reviewForm', [
-    'geolocation', function(geolocation) {
+    'geolocation', 'geocoding', function(geolocation, geocoding) {
       return {
         restrict: 'E',
         scope: {
@@ -62,49 +62,86 @@
         },
         templateUrl: 'partials/reviewForm.hbs',
         controller: function($scope) {
-          var emptyForm, searchingPosition, showPosition, toggleSubmitDisabled;
-          $scope.beer = {};
+          var clearBeerLocation, emptyBeer, emptyForm, locationInput, saveAndCleanReview, showSearchingLocation, submitButton, toggleLocationInputDisabled, toggleSubmitDisabled, updateLocationInputPlaceholder;
+          emptyBeer = function() {
+            return {
+              beer_location: {
+                address: {}
+              }
+            };
+          };
+          $scope.beer = emptyBeer();
           $scope.searchBeer = function(name) {
             return alert('Search not yet implemented. Coming soon.');
           };
           $scope.addReview = function(form) {
+            var displayName;
             if (form.$valid) {
-              $scope.add($scope.beer);
-              return emptyForm(form);
+              if ($scope.beer.beer_location.lat && $scope.beer.beer_location.addressCache === $scope.beer.beer_location.displayName) {
+                return saveAndCleanReview(form);
+              } else {
+                displayName = $scope.beer.beer_location.displayName;
+                clearBeerLocation();
+                return geocoding.getPosition({
+                  displayName: displayName
+                }).then(function(position) {
+                  return $scope.beer.beer_location = position;
+                })["catch"](function() {
+                  return $scope.beer.beer_location.displayName = displayName;
+                })["finally"](function() {
+                  return saveAndCleanReview(form);
+                });
+              }
             }
           };
-          $scope.getPosition = function() {
-            searchingPosition();
-            return geolocation.getPosition().then(function(position) {
-              return showPosition(position);
+          $scope.getCurrentPosition = function() {
+            showSearchingLocation();
+            return geolocation.getCurrentPosition().then(function(position) {
+              $scope.beer.beer_location = position;
+              return showSearchingLocation(false);
             })["catch"](function(error) {
-              return searchingPosition(false, error);
+              return showSearchingLocation(false, error);
             });
           };
-          searchingPosition = function(searching, error) {
-            var placeholder;
+          saveAndCleanReview = function(form) {
+            delete $scope.beer.beer_location.addressCache;
+            $scope.add($scope.beer);
+            return emptyForm(form);
+          };
+          showSearchingLocation = function(searching, error) {
+            var errorMessage, searchingMessage;
             if (searching == null) {
               searching = true;
             }
-            placeholder = searching ? 'Finding location..' : 'Where did you find the beer?';
-            angular.element('#beer_location').attr('placeholder', placeholder).prop('disabled', searching);
-            toggleSubmitDisabled();
-            if (!searching) {
-              return alert("" + error + " \n Please, enter location manually.");
+            if (searching || error) {
+              searchingMessage = 'Finding current location.';
+              errorMessage = 'Please, enter location manually.';
+              updateLocationInputPlaceholder(searching ? searchingMessage : errorMessage);
+            }
+            toggleLocationInputDisabled(searching);
+            toggleSubmitDisabled(searching);
+            if (error) {
+              return alert("" + error + " \n " + errorMessage + ".");
             }
           };
-          showPosition = function(position) {
-            angular.element('#beer_location').val("" + position.lat + ", " + position.lng).prop('disabled', false);
-            return toggleSubmitDisabled();
+          submitButton = angular.element('.review_form .submit');
+          locationInput = angular.element('#beer_location');
+          updateLocationInputPlaceholder = function(message) {
+            return locationInput.prop('placeholder', message);
+          };
+          toggleLocationInputDisabled = function(disabled) {
+            return locationInput.prop('disabled', disabled || !locationInput.prop('disabled'));
           };
           toggleSubmitDisabled = function(disabled) {
-            var submit;
-            submit = angular.element('.review_form .submit');
-            disabled = disabled || !submit.prop('disabled');
-            return submit.prop('disabled', disabled);
+            return submitButton.prop('disabled', disabled || !submitButton.prop('disabled'));
+          };
+          clearBeerLocation = function() {
+            return $scope.beer.beer_location = {
+              address: {}
+            };
           };
           return emptyForm = function(form) {
-            $scope.beer = {};
+            $scope.beer = emptyBeer();
             return form.$setPristine();
           };
         }
