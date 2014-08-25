@@ -4,5 +4,7 @@ node_modules/
 bower_components/
 .sass-cache/
 tmp
+app/coffee/secrets.coffee
+app/js/secrets.js
 .DS_Store
 .idea

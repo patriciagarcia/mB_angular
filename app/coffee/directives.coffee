@@ -1,6 +1,50 @@
 'use strict'
 
 angular.module('myBeers.directives', [])
+  .directive 'beerMap', ->
+    restrict: 'E'
+    scope:
+      beers: '='
+    templateUrl: 'partials/map.hbs'
+    controller: ($scope, $window) ->
+      # Init the map, marker layer and geojson
+      $window.L.mapbox.accessToken = $window.secrets.mapboxAccessToken
+      map = $window.L.mapbox.map('map', 'ptrcgrc.jalbaddk')
+      markersLayer = $window.L.mapbox.featureLayer().addTo(map)
+      geojson =
+        type: 'FeatureCollection'
+        features: []
+
+      # Watch for changes in 'beers' collection
+      $scope.$watchCollection 'beers', (newBeers, oldBeers) ->
+        $scope.addMarkers(onlyNewItems(newBeers, oldBeers))
+
+      $scope.addMarkers = (beers) ->
+        for beer in beers
+          marker =
+            type: 'Feature'
+            properties:
+              title: beer.beer_name
+              description: "By #{beer.brewery_name}"
+              'marker-color': '#7ec9b1'
+              'marker-size': 'medium'
+            geometry:
+              type: 'Point'
+              coordinates: [beer.beer_location.lon, beer.beer_location.lat]
+
+          geojson['features'].push(marker)
+
+        markersLayer.setGeoJSON(geojson)
+
+      onlyNewItems = (newCollection, oldCollection) ->
+        newItems = []
+
+        for item in newCollection
+          if item in newCollection and item not in oldCollection
+            newItems.push(item)
+
+        newItems
+
   .directive 'beer', ->
     restrict: 'E'
     scope:

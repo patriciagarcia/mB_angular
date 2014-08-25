@@ -1,6 +1,61 @@
 (function() {
   'use strict';
-  angular.module('myBeers.directives', []).directive('beer', function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  angular.module('myBeers.directives', []).directive('beerMap', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        beers: '='
+      },
+      templateUrl: 'partials/map.hbs',
+      controller: function($scope, $window) {
+        var geojson, map, markersLayer, onlyNewItems;
+        $window.L.mapbox.accessToken = $window.secrets.mapboxAccessToken;
+        map = $window.L.mapbox.map('map', 'ptrcgrc.jalbaddk');
+        markersLayer = $window.L.mapbox.featureLayer().addTo(map);
+        geojson = {
+          type: 'FeatureCollection',
+          features: []
+        };
+        $scope.$watchCollection('beers', function(newBeers, oldBeers) {
+          return $scope.addMarkers(onlyNewItems(newBeers, oldBeers));
+        });
+        $scope.addMarkers = function(beers) {
+          var beer, marker, _i, _len;
+          for (_i = 0, _len = beers.length; _i < _len; _i++) {
+            beer = beers[_i];
+            marker = {
+              type: 'Feature',
+              properties: {
+                title: beer.beer_name,
+                description: "By " + beer.brewery_name,
+                'marker-color': '#7ec9b1',
+                'marker-size': 'medium'
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [beer.beer_location.lon, beer.beer_location.lat]
+              }
+            };
+            geojson['features'].push(marker);
+          }
+          return markersLayer.setGeoJSON(geojson);
+        };
+        return onlyNewItems = function(newCollection, oldCollection) {
+          var item, newItems, _i, _len;
+          newItems = [];
+          for (_i = 0, _len = newCollection.length; _i < _len; _i++) {
+            item = newCollection[_i];
+            if (__indexOf.call(newCollection, item) >= 0 && __indexOf.call(oldCollection, item) < 0) {
+              newItems.push(item);
+            }
+          }
+          return newItems;
+        };
+      }
+    };
+  }).directive('beer', function() {
     return {
       restrict: 'E',
       scope: {

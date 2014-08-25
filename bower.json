@@ -10,6 +10,7 @@
     "angular-loader": "1.2.x",
     "angular-mocks": "~1.2.x",
     "bootstrap": "~3.2.0",
-    "pouchdb": "~3.0.2"
+    "pouchdb": "~3.0.2",
+    "mapbox.js": "~2.0.1"
   }
 }

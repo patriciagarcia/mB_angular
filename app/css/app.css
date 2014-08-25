@@ -32,3 +32,9 @@ li {
     height: 50px;
     padding: 12px;
     text-align: center; }
+
+.my_beers_map {
+  display: block; }
+  .my_beers_map #map {
+    height: 300px;
+    width: 100%; }
