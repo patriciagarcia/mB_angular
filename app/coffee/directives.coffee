@@ -63,6 +63,8 @@ angular.module('myBeers.directives', [])
     scope:
       beers: '='
       delete: '='
+      showAll: '='
+      showFavorites: '='
       title: '@'
     templateUrl: 'partials/beerList.hbs'
 

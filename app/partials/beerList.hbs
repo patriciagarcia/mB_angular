@@ -1,5 +1,9 @@
 <header ng-show="title">
-    <span class="title">{{title}}</span>
+    <p class="title">{{title}}</p>
+    <p class="filters">
+        <span class="all" ng-click="showAll()"><a href>All</a></span>
+        <span class="favorites" ng-click="showFavorites()"><a href>My favorites</a></span>
+    </p>
 </header>
 <ul>
     <li ng-repeat="beer in beers">

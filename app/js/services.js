@@ -35,6 +35,16 @@
             return result;
           });
         },
+        query: function(map) {
+          return pouchdb.query({
+            map: map,
+            include_docs: true
+          }).then(function(result) {
+            return result.rows.map(function(beer) {
+              return beer.key;
+            });
+          });
+        },
         all: function() {
           return pouchdb.allDocs({
             include_docs: true,

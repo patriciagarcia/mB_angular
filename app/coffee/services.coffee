@@ -35,6 +35,16 @@ angular.module('myBeers.services', [])
             return result
 
       # Returns a beer array
+      query: (map) ->
+        pouchdb.query
+          map: map
+          include_docs: true
+        .then (result) ->
+          return result.rows
+                  .map (beer) ->
+                    return beer.key
+
+      # Returns a beer array
       all: ->
         pouchdb.allDocs(
           include_docs: true
