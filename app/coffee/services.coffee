@@ -1,9 +1,9 @@
 'use strict'
 
 angular.module('myBeers.services', [])
-  .factory 'db', ->
+  .factory 'db', ['COUCHDB', (COUCHDB) ->
     pouchdb = new PouchDB('beersdb')
-    remoteCouch = 'http://ptrcgrc.iriscouch.com/beersdb'
+    remoteCouch = COUCHDB.remoteCouch
 
     syncError = ->
       console.log('CouchDB sync error') if console
@@ -54,8 +54,9 @@ angular.module('myBeers.services', [])
           .on 'change', ->
             callback()
     }
+  ]
 
-  .factory 'geolocation', ['$q', '$window', 'geocoding', ($q, $window, geocoding) ->
+  .factory 'geolocation', ['$q', '$window', 'geocoding', 'GEOLOCATION', ($q, $window, geocoding, GEOLOCATION) ->
     # geolocation service return
     {
       getCurrentPosition: ->
@@ -63,9 +64,9 @@ angular.module('myBeers.services', [])
 
         onError = ->
           if ($window.navigator.geolocation)
-            error = 'Error: the geolocation service failed.'
+            error = GEOLOCATION.serviceErrorMsg
           else
-            error = 'Error: Your browser does not support geolocation.'
+            error = GEOLOCATION.supportErrorMsg
           deferred.reject(error)
 
         geocode = (data) ->
@@ -89,7 +90,7 @@ angular.module('myBeers.services', [])
     }
   ]
 
-  .factory 'geocoding', ['$q', '$http', ($q, $http) ->
+  .factory 'geocoding', ['$q', '$http', 'NOMINATIM', ($q, $http, NOMINATIM) ->
 
     onError = (deferred, error) ->
       deferred.reject(error)
@@ -107,7 +108,7 @@ angular.module('myBeers.services', [])
       getPosition: (location, reverse = false) ->
         deferred = $q.defer()
 
-        url = "http://nominatim.openstreetmap.org/#{if reverse then 'reverse' else 'search'}"
+        url = "#{NOMINATIM.geocodingUrl}#{if reverse then 'reverse' else 'search'}"
 
         params =
           format: 'json'

@@ -1,62 +1,64 @@
 (function() {
   'use strict';
-  angular.module('myBeers.services', []).factory('db', function() {
-    var pouchdb, remoteCouch, sync, syncError;
-    pouchdb = new PouchDB('beersdb');
-    remoteCouch = 'http://ptrcgrc.iriscouch.com/beersdb';
-    syncError = function() {
-      if (console) {
-        return console.log('CouchDB sync error');
-      }
-    };
-    sync = function() {
-      var opts;
-      opts = {
-        live: true
+  angular.module('myBeers.services', []).factory('db', [
+    'COUCHDB', function(COUCHDB) {
+      var pouchdb, remoteCouch, sync, syncError;
+      pouchdb = new PouchDB('beersdb');
+      remoteCouch = COUCHDB.remoteCouch;
+      syncError = function() {
+        if (console) {
+          return console.log('CouchDB sync error');
+        }
       };
-      pouchdb.replicate.to(remoteCouch, opts, syncError);
-      return pouchdb.replicate.from(remoteCouch, opts, syncError);
-    };
-    sync();
-    return {
-      put: function(obj) {
-        return pouchdb.put(obj).then(function(result) {
-          return result;
-        });
-      },
-      get: function(id) {
-        return pouchdb.get(id).then(function(result) {
-          return result;
-        });
-      },
-      "delete": function(obj) {
-        return pouchdb.remove(obj).then(function(result) {
-          return result;
-        });
-      },
-      all: function() {
-        return pouchdb.allDocs({
-          include_docs: true,
-          descending: true
-        }).then(function(result) {
-          return result.rows.map(function(beer) {
-            return beer.doc;
+      sync = function() {
+        var opts;
+        opts = {
+          live: true
+        };
+        pouchdb.replicate.to(remoteCouch, opts, syncError);
+        return pouchdb.replicate.from(remoteCouch, opts, syncError);
+      };
+      sync();
+      return {
+        put: function(obj) {
+          return pouchdb.put(obj).then(function(result) {
+            return result;
           });
-        });
-      },
-      onChange: function(callback) {
-        return pouchdb.info(function(err, info) {
-          return pouchdb.changes({
-            since: info.update_seq,
-            live: true
-          }).on('change', function() {
-            return callback();
+        },
+        get: function(id) {
+          return pouchdb.get(id).then(function(result) {
+            return result;
           });
-        });
-      }
-    };
-  }).factory('geolocation', [
-    '$q', '$window', 'geocoding', function($q, $window, geocoding) {
+        },
+        "delete": function(obj) {
+          return pouchdb.remove(obj).then(function(result) {
+            return result;
+          });
+        },
+        all: function() {
+          return pouchdb.allDocs({
+            include_docs: true,
+            descending: true
+          }).then(function(result) {
+            return result.rows.map(function(beer) {
+              return beer.doc;
+            });
+          });
+        },
+        onChange: function(callback) {
+          return pouchdb.info(function(err, info) {
+            return pouchdb.changes({
+              since: info.update_seq,
+              live: true
+            }).on('change', function() {
+              return callback();
+            });
+          });
+        }
+      };
+    }
+  ]).factory('geolocation', [
+    '$q', '$window', 'geocoding', 'GEOLOCATION', function($q, $window, geocoding, GEOLOCATION) {
       return {
         getCurrentPosition: function() {
           var deferred, geocode, onError;
@@ -64,9 +66,9 @@
           onError = function() {
             var error;
             if ($window.navigator.geolocation) {
-              error = 'Error: the geolocation service failed.';
+              error = GEOLOCATION.serviceErrorMsg;
             } else {
-              error = 'Error: Your browser does not support geolocation.';
+              error = GEOLOCATION.supportErrorMsg;
             }
             return deferred.reject(error);
           };
@@ -93,7 +95,7 @@
       };
     }
   ]).factory('geocoding', [
-    '$q', '$http', function($q, $http) {
+    '$q', '$http', 'NOMINATIM', function($q, $http, NOMINATIM) {
       var onError, returnPosition;
       onError = function(deferred, error) {
         return deferred.reject(error);
@@ -114,7 +116,7 @@
             reverse = false;
           }
           deferred = $q.defer();
-          url = "http://nominatim.openstreetmap.org/" + (reverse ? 'reverse' : 'search');
+          url = "" + NOMINATIM.geocodingUrl + (reverse ? 'reverse' : 'search');
           params = {
             format: 'json',
             addressdetails: 1

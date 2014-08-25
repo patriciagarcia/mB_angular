@@ -6,10 +6,10 @@ angular.module('myBeers.directives', [])
     scope:
       beers: '='
     templateUrl: 'partials/map.hbs'
-    controller: ($scope, $window) ->
+    controller: ($scope, $window, MAPBOX) ->
       # Init the map, marker layer and geojson
       $window.L.mapbox.accessToken = $window.secrets.mapboxAccessToken
-      map = $window.L.mapbox.map('map', 'ptrcgrc.jalbaddk')
+      map = $window.L.mapbox.map('map', MAPBOX.mapId)
       markersLayer = $window.L.mapbox.featureLayer().addTo(map)
       geojson =
         type: 'FeatureCollection'
@@ -28,8 +28,8 @@ angular.module('myBeers.directives', [])
             properties:
               title: beer.beer_name
               description: "By #{beer.brewery_name}"
-              'marker-color': '#7ec9b1'
-              'marker-size': 'medium'
+              'marker-color': MAPBOX.markerColors[beer.beer_rating - 1]
+              'marker-size': MAPBOX.markerSize
             geometry:
               type: 'Point'
               coordinates: [beer.beer_location.lon, beer.beer_location.lat]
@@ -46,7 +46,7 @@ angular.module('myBeers.directives', [])
       delete: '='
     templateUrl: 'partials/beer.hbs'
 
-  .directive 'rating', ->
+  .directive 'rating', ['RATING', (RATING) ->
     restrict: 'E'
     scope:
       rating: '@'
@@ -54,8 +54,9 @@ angular.module('myBeers.directives', [])
     link: (scope, elem, attrs) ->
       rating = scope.rating || 0
       full_stars = ({empty: false} for num in [0...rating])
-      empty_stars = ({empty: true} for num in [0...(5 - rating)])
+      empty_stars = ({empty: true} for num in [0...(RATING.maxRating - rating)])
       scope.stars = full_stars.concat empty_stars
+  ]
 
   .directive 'beerList', ->
     restrict: 'E'
@@ -65,7 +66,7 @@ angular.module('myBeers.directives', [])
       title: '@'
     templateUrl: 'partials/beerList.hbs'
 
-  .directive 'reviewForm', ['geolocation', 'geocoding', (geolocation, geocoding) ->
+  .directive 'reviewForm', ['geolocation', 'geocoding', 'GEOLOCATION', (geolocation, geocoding, GEOLOCATION) ->
     restrict: 'E'
     scope:
       add: '='
@@ -113,14 +114,13 @@ angular.module('myBeers.directives', [])
 
       showSearchingLocation = (searching = true, error) ->
         if searching or error
-          searchingMessage = 'Finding current location.'
-          errorMessage = 'Please, enter location manually.'
-          updateLocationInputPlaceholder(if searching then searchingMessage else errorMessage)
+          updateLocationInputPlaceholder(
+            if searching then GEOLOCATION.searchingMessage else GEOLOCATION.errorMessage)
 
         toggleLocationInputDisabled(searching)
         toggleSubmitDisabled(searching)
 
-        alert("#{error} \n #{errorMessage}.") if error
+        alert("#{error} \n #{GEOLOCATION.errorMessage}.") if error
 
       submitButton = angular.element('.review_form .submit')
       locationInput = angular.element('#beer_location')

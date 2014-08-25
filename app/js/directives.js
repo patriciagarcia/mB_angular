@@ -7,10 +7,10 @@
         beers: '='
       },
       templateUrl: 'partials/map.hbs',
-      controller: function($scope, $window) {
+      controller: function($scope, $window, MAPBOX) {
         var geojson, map, markersLayer;
         $window.L.mapbox.accessToken = $window.secrets.mapboxAccessToken;
-        map = $window.L.mapbox.map('map', 'ptrcgrc.jalbaddk');
+        map = $window.L.mapbox.map('map', MAPBOX.mapId);
         markersLayer = $window.L.mapbox.featureLayer().addTo(map);
         geojson = {
           type: 'FeatureCollection',
@@ -29,8 +29,8 @@
               properties: {
                 title: beer.beer_name,
                 description: "By " + beer.brewery_name,
-                'marker-color': '#7ec9b1',
-                'marker-size': 'medium'
+                'marker-color': MAPBOX.markerColors[beer.beer_rating - 1],
+                'marker-size': MAPBOX.markerSize
               },
               geometry: {
                 type: 'Point',
@@ -53,40 +53,42 @@
       },
       templateUrl: 'partials/beer.hbs'
     };
-  }).directive('rating', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        rating: '@'
-      },
-      templateUrl: 'partials/rating.hbs',
-      link: function(scope, elem, attrs) {
-        var empty_stars, full_stars, num, rating;
-        rating = scope.rating || 0;
-        full_stars = (function() {
-          var _i, _results;
-          _results = [];
-          for (num = _i = 0; 0 <= rating ? _i < rating : _i > rating; num = 0 <= rating ? ++_i : --_i) {
-            _results.push({
-              empty: false
-            });
-          }
-          return _results;
-        })();
-        empty_stars = (function() {
-          var _i, _ref, _results;
-          _results = [];
-          for (num = _i = 0, _ref = 5 - rating; 0 <= _ref ? _i < _ref : _i > _ref; num = 0 <= _ref ? ++_i : --_i) {
-            _results.push({
-              empty: true
-            });
-          }
-          return _results;
-        })();
-        return scope.stars = full_stars.concat(empty_stars);
-      }
-    };
-  }).directive('beerList', function() {
+  }).directive('rating', [
+    'RATING', function(RATING) {
+      return {
+        restrict: 'E',
+        scope: {
+          rating: '@'
+        },
+        templateUrl: 'partials/rating.hbs',
+        link: function(scope, elem, attrs) {
+          var empty_stars, full_stars, num, rating;
+          rating = scope.rating || 0;
+          full_stars = (function() {
+            var _i, _results;
+            _results = [];
+            for (num = _i = 0; 0 <= rating ? _i < rating : _i > rating; num = 0 <= rating ? ++_i : --_i) {
+              _results.push({
+                empty: false
+              });
+            }
+            return _results;
+          })();
+          empty_stars = (function() {
+            var _i, _ref, _results;
+            _results = [];
+            for (num = _i = 0, _ref = RATING.maxRating - rating; 0 <= _ref ? _i < _ref : _i > _ref; num = 0 <= _ref ? ++_i : --_i) {
+              _results.push({
+                empty: true
+              });
+            }
+            return _results;
+          })();
+          return scope.stars = full_stars.concat(empty_stars);
+        }
+      };
+    }
+  ]).directive('beerList', function() {
     return {
       restrict: 'E',
       scope: {
@@ -97,7 +99,7 @@
       templateUrl: 'partials/beerList.hbs'
     };
   }).directive('reviewForm', [
-    'geolocation', 'geocoding', function(geolocation, geocoding) {
+    'geolocation', 'geocoding', 'GEOLOCATION', function(geolocation, geocoding, GEOLOCATION) {
       return {
         restrict: 'E',
         scope: {
@@ -152,19 +154,16 @@
             return emptyForm(form);
           };
           showSearchingLocation = function(searching, error) {
-            var errorMessage, searchingMessage;
             if (searching == null) {
               searching = true;
             }
             if (searching || error) {
-              searchingMessage = 'Finding current location.';
-              errorMessage = 'Please, enter location manually.';
-              updateLocationInputPlaceholder(searching ? searchingMessage : errorMessage);
+              updateLocationInputPlaceholder(searching ? GEOLOCATION.searchingMessage : GEOLOCATION.errorMessage);
             }
             toggleLocationInputDisabled(searching);
             toggleSubmitDisabled(searching);
             if (error) {
-              return alert("" + error + " \n " + errorMessage + ".");
+              return alert("" + error + " \n " + GEOLOCATION.errorMessage + ".");
             }
           };
           submitButton = angular.element('.review_form .submit');

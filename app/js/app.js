@@ -1,5 +1,5 @@
 (function() {
   'use strict';
-  angular.module('myBeers', ['myBeers.controllers', 'myBeers.directives', 'myBeers.services']);
+  angular.module('myBeers', ['myBeers.controllers', 'myBeers.directives', 'myBeers.services', 'myBeers.constants']);
 
 }).call(this);
