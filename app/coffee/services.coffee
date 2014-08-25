@@ -43,6 +43,16 @@ angular.module('myBeers.services', [])
           return result.rows
                     .map (beer) ->
                       return beer.doc
+
+      # Register a callback that will be fired
+      # when the db changes, locally or remotely.
+      onChange: (callback) ->
+        pouchdb.info (err, info) ->
+          pouchdb.changes
+            since: info.update_seq
+            live: true
+          .on 'change', ->
+            callback()
     }
 
   .factory 'geolocation', ['$q', '$window', 'geocoding', ($q, $window, geocoding) ->

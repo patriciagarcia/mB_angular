@@ -4,9 +4,13 @@ angular.module('myBeers.controllers', [])
   .controller 'myBeerListCtrl', ['$scope', 'db', ($scope, db) ->
     $scope.beers = []
 
-    db.all().then (data) ->
-      $scope.$apply ->
-        $scope.beers = data
+    fetchBeers = ->
+      db.all().then (data) ->
+        $scope.$apply ->
+          $scope.beers = data
+
+    fetchBeers()
+    db.onChange(fetchBeers)
 
     $scope.deleteBeer = (beer) ->
       $scope.beers.splice($scope.beers.indexOf(beer), 1)

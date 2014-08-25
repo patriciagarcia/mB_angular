@@ -43,6 +43,16 @@
             return beer.doc;
           });
         });
+      },
+      onChange: function(callback) {
+        return pouchdb.info(function(err, info) {
+          return pouchdb.changes({
+            since: info.update_seq,
+            live: true
+          }).on('change', function() {
+            return callback();
+          });
+        });
       }
     };
   }).factory('geolocation', [

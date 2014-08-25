@@ -4,12 +4,17 @@
 
   angular.module('myBeers.controllers', []).controller('myBeerListCtrl', [
     '$scope', 'db', function($scope, db) {
+      var fetchBeers;
       $scope.beers = [];
-      db.all().then(function(data) {
-        return $scope.$apply(function() {
-          return $scope.beers = data;
+      fetchBeers = function() {
+        return db.all().then(function(data) {
+          return $scope.$apply(function() {
+            return $scope.beers = data;
+          });
         });
-      });
+      };
+      fetchBeers();
+      db.onChange(fetchBeers);
       $scope.deleteBeer = function(beer) {
         $scope.beers.splice($scope.beers.indexOf(beer), 1);
         return db["delete"](beer);
