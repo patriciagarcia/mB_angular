@@ -17,9 +17,11 @@ angular.module('myBeers.directives', [])
 
       # Watch for changes in 'beers' collection
       $scope.$watchCollection 'beers', (newBeers, oldBeers) ->
-        $scope.addMarkers(onlyNewItems(newBeers, oldBeers))
+        $scope.addMarkers(newBeers)
 
       $scope.addMarkers = (beers) ->
+        markers = []
+
         for beer in beers
           marker =
             type: 'Feature'
@@ -32,18 +34,10 @@ angular.module('myBeers.directives', [])
               type: 'Point'
               coordinates: [beer.beer_location.lon, beer.beer_location.lat]
 
-          geojson['features'].push(marker)
+          markers.push(marker)
 
+        geojson['features'] = markers
         markersLayer.setGeoJSON(geojson)
-
-      onlyNewItems = (newCollection, oldCollection) ->
-        newItems = []
-
-        for item in newCollection
-          if item in newCollection and item not in oldCollection
-            newItems.push(item)
-
-        newItems
 
   .directive 'beer', ->
     restrict: 'E'

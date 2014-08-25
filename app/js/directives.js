@@ -1,7 +1,5 @@
 (function() {
   'use strict';
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
   angular.module('myBeers.directives', []).directive('beerMap', function() {
     return {
       restrict: 'E',
@@ -10,7 +8,7 @@
       },
       templateUrl: 'partials/map.hbs',
       controller: function($scope, $window) {
-        var geojson, map, markersLayer, onlyNewItems;
+        var geojson, map, markersLayer;
         $window.L.mapbox.accessToken = $window.secrets.mapboxAccessToken;
         map = $window.L.mapbox.map('map', 'ptrcgrc.jalbaddk');
         markersLayer = $window.L.mapbox.featureLayer().addTo(map);
@@ -19,10 +17,11 @@
           features: []
         };
         $scope.$watchCollection('beers', function(newBeers, oldBeers) {
-          return $scope.addMarkers(onlyNewItems(newBeers, oldBeers));
+          return $scope.addMarkers(newBeers);
         });
-        $scope.addMarkers = function(beers) {
-          var beer, marker, _i, _len;
+        return $scope.addMarkers = function(beers) {
+          var beer, marker, markers, _i, _len;
+          markers = [];
           for (_i = 0, _len = beers.length; _i < _len; _i++) {
             beer = beers[_i];
             marker = {
@@ -38,20 +37,10 @@
                 coordinates: [beer.beer_location.lon, beer.beer_location.lat]
               }
             };
-            geojson['features'].push(marker);
+            markers.push(marker);
           }
+          geojson['features'] = markers;
           return markersLayer.setGeoJSON(geojson);
-        };
-        return onlyNewItems = function(newCollection, oldCollection) {
-          var item, newItems, _i, _len;
-          newItems = [];
-          for (_i = 0, _len = newCollection.length; _i < _len; _i++) {
-            item = newCollection[_i];
-            if (__indexOf.call(newCollection, item) >= 0 && __indexOf.call(oldCollection, item) < 0) {
-              newItems.push(item);
-            }
-          }
-          return newItems;
         };
       }
     };
